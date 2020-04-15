@@ -36,38 +36,43 @@ public class MessageRepositoryTest {
                 Message.builder().msgText("orange").msgSummary("水果").build(),
                 Message.builder().msgText("banana").msgSummary("水果").build()));
         // 保存多个
+
+        message =new Message();
+        message.setMsgText("new对象");
+        message.setMsgSummary("学习");
         messageRepository.saveAll(messages);
+
     }
 
     @Test
     public void testDelete() {
-        Message message = Message.builder().msgId(1)
-                .msgText("computer").msgSummary("学习").build();
+//        Message message = Message.builder().msgId(1)
+//                .msgText("computer").msgSummary("学习").build();
 
-        // 删除单条记录
-        // 根据主键删除
-        messageRepository.deleteById(1);
-        // 提供对象，根据主键删除
-        messageRepository.delete(message);
+//        // 删除单条记录
+//        // 根据主键删除
+//        messageRepository.deleteById(1);
+//        // 提供对象，根据主键删除
+//        messageRepository.delete(message);
 
         // 删除集合
-        message = Message.builder().msgId(2)
-                .msgText("computer").msgSummary("学习").build();
-        List<Message> messages = new ArrayList<>();
-        messages.add(message);
-        message = Message.builder().msgId(3)
-                .msgText("computer").msgSummary("学习").build();
-        messages.add(message);
-        // 删除集合：一条一条删除
-        messageRepository.deleteAll(messages);
-        // 删除集合：一条 sql，拼接 or语句
-        messageRepository.deleteInBatch(messages);
-
-        // 删除全部
-        // 删除所有：先findAll，然后一条一条删除，最后提交事务
+//        message = Message.builder().msgId(1)
+//                .msgText("computer").msgSummary("学习").build();
+//        List<Message> messages = new ArrayList<>();
+//        messages.add(message);
+//        message = Message.builder().msgId(3)
+//                .msgText("computer").msgSummary("学习").build();
+//        messages.add(message);
+//        // 删除集合：一条一条删除
+//        messageRepository.deleteAll(messages);
+//        // 删除集合：一条 sql，拼接 or语句
+//        messageRepository.deleteInBatch(messages);
+//
+//        // 删除全部
+//        // 删除所有：先findAll，然后一条一条删除，最后提交事务
         messageRepository.deleteAll();
-        // 删除所有：使用一条 sql
-        messageRepository.deleteAllInBatch();
+//        // 删除所有：使用一条 sql
+//        messageRepository.deleteAllInBatch();
     }
 
     @Autowired
@@ -96,8 +101,16 @@ public class MessageRepositoryTest {
         // 分页查询全部，返回封装了的分页信息， jpa页码从0开始
         Page<Message> pageInfo = messageRepository.findAll(
                 PageRequest.of(1, 3, Sort.Direction.ASC, "msgId"));
-        log.info("分页查询结果： ");
-        pageInfo.get().forEach(System.out::print);
+//        log.info("分页查询结果： ");
+        log.info("总记录数：{}",pageInfo.getTotalElements());
+        log.info("当前页记录数：{}",pageInfo.getNumberOfElements());
+        log.info("每页记录数：{}",pageInfo.getSize());
+        log.info("获取总页数：{}",pageInfo.getTotalPages());
+        log.info("查询结果：{}",pageInfo.getContent());
+        log.info("当前页（从0计算）：{}",pageInfo.getNumber());
+        log.info("是否为首页：{}",pageInfo.isFirst());
+        log.info("是否为尾页：{}",pageInfo.isLast());
+//        pageInfo.get().forEach(System.out::print);
 
         // 条件查询
         Message message = Message.builder().msgSummary("水果").build();
